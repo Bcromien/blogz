@@ -9,10 +9,12 @@
         <tr>
             <td><label id="blog_title">Title:</label></td>
             <td><input type="text" name="blog_title" style="width: 1190px" required/></td>
+            <td><span class="error">{{title_error}}</span></td>
         </tr>
         <tr>
             <td><label id="entry">Entry:</label></td>
             <td><textarea type="text" name="entry" rows="25" cols="150" required>What's on your mind? </textarea></td>
+            <td><span type="error">{{entry_error}}</span></td>
         </tr>
         <tr>
             <td><input type="submit" value="Post"/></td>

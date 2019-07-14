@@ -12,7 +12,7 @@ class Blog(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     blog_title = db.Column(db.String(120))
-    entry = db.Column(db.String(500))
+    entry = db.Column(db.String(900))
 
     def __init__(self, blog_title, entry):
         self.blog_title = blog_title
@@ -27,6 +27,8 @@ def blog():
         new_blog = Blog(blog_title, entry)
         db.session.add(new_blog)
         db.session.commit()
+
+        
         return render_template('blog.html',blog=new_blog)
 
     else:
@@ -39,8 +41,9 @@ def home():
     blogs = Blog.query.all()
     return render_template('home.html', blogs=blogs)
 
-@app.route('/newpost', methods=['GET'])
+@app.route('/newpost', methods=['POST','GET'])
 def newpost():
+
     return render_template('newpost.html')
 
 if __name__ == "__main__":
