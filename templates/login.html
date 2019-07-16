@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Log In</title>
+  <style>
+    .error { 
+      color: red;
+      font-size: 10px; 
+      }
+  </style>
+</head>
+
+<body>
+  <h1>Log In To Start Bloggin'</h1>
+  <form action="/signup" method="POST">
+    <table>
+        <tr>
+            <td><label for="username">Username:</label></td>
+            <td><input type="text" name="username" required value={{username}}></td>
+            <td><span class="error">{{username_error}}</span></td>
+        </tr>
+        <tr>
+            <td><label for="password">Password:</label></td>
+            <td><input type="password" name="password" required></td>
+            <td><span class="error">{{password_error}}</span></td>
+        </tr>
+    </table>
+    <input type="submit" value="Log In">
+  </form>
+</body>
+
+</html>
