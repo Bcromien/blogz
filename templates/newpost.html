@@ -1,7 +1,6 @@
-<head>
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='stylesheet.css')}}"/>
-    <img src="{{url_for('static',filename='workspace.control.8.jpg')}}" class="background"> 
-</head>
+{% extends "base.html" %}
+
+{% block content %} 
 <a href="/"><h4>Home Page</h4></a>
 <h1>Add A Blog...</h1>
 <form method="POST" action="/blog">
@@ -21,3 +20,4 @@
         </tr>
     </table>
 </form>
+{% endblock %}

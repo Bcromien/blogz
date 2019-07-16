@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+    <head>
+        <title>{{title}}</title>
+        <style>
+            .error {
+                color: red;
+            }
+        </style>
+        <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='stylesheet.css')}}"/>
+        <img src="{{url_for('static',filename='workspace.control.8.jpg')}}" class="background"> 
+    </head>
+<body>
+
+    <div>
+        <a href='/'>Home</a>
+        <a href='/newpost'>New Blog</a>
+        <a href='/logout'>log out</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        <ul>
+        {% for category,message in messages %}
+            <li class="{{category}}">{{message}}</li>
+        {% endfor %}
+        </ul>
+    {% endwith %}
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>

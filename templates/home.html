@@ -1,14 +1,15 @@
-<!DOCTYPE html>
-<html>
-    <head>
+{% extends "base.html" %}
+    <!--<head>
         <title>Build A Blog!</title>
         <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='stylesheet.css')}}"/>
         <img src="{{url_for('static',filename='workspace.control.8.jpg')}}" class="background"> 
-    </head>
+    </head>-->
+{% block content %}    
     <body >
         <nav>
             <a href="/"><h4>Home Page</h4></a>
             <a href="/newpost"><h4>Add A Blog</h4></a>
+            <a href="/login">Log In</a>
         </nav>
         <h1>Build A Blog!</h1>
         {% for blog in blogs %}
@@ -19,4 +20,4 @@
         </ul>
         {% endfor %}
     </body>
-</html>
+{% endblock %}

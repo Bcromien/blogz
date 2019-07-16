@@ -1,8 +1,7 @@
-<head>
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='stylesheet.css')}}"/>
-    <img src="{{url_for('static',filename='workspace.control.8.jpg')}}" class="background"> 
-</head>
-<a href="/"><h4>Home Page</h4></a>
+{% extends "base.html" %}
+
+{% block content %} 
+
 <ul>
     <li><a style="font-size: 40px;" href="/blog?id={{ blog.id }}">{{ blog.blog_title }}</a>
     <br>
@@ -10,3 +9,5 @@
     {{ blog.entry }}
     </li>
 </ul>
+
+{% endblock %}
