@@ -1,13 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %} 
-
+<h1>Blog Posts</h1>
 <ul>
+
+    {% for blog in blogs %}
+
     <li><a style="font-size: 40px;" href="/blog?id={{ blog.id }}">{{ blog.blog_title }}</a>
     <br>
     <br>
     {{ blog.entry }}
     </li>
+
+    {% endfor %}
+
 </ul>
 
 {% endblock %}

@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %} 
-<a href="/"><h4>Home Page</h4></a>
-<h1>Add A Blog...</h1>
-<form method="POST" action="/blog">
+<h1>Add a new blog post...</h1>
+<form method="POST" action="/newpost">
     <table>
         <tr>
             <td><label id="blog_title">Title:</label></td>
@@ -11,8 +10,8 @@
             <td><span class="error">{{title_error}}</span></td>
         </tr>
         <tr>
-            <td><label id="entry">Entry:</label></td>
-            <td><textarea type="text" name="entry" rows="25" cols="150" required>What's on your mind? </textarea></td>
+            <td><label id="entry">Blog Entry:</label></td>
+            <td><textarea type="text" name="entry" rows="25" cols="150" placeholder="What's on your mind?" required></textarea></td>
             <td><span type="error">{{entry_error}}</span></td>
         </tr>
         <tr>

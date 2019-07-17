@@ -1,12 +1,15 @@
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, session
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:blogz@localhost:8889/blogz'
 app.config['SQLALCHEMY_ECHO'] = True
+app.config['SQLALCHEMY'] = True
 
 db = SQLAlchemy(app)
+
+app.secret_key ='blogz123'
 
 class Blog(db.Model):
 
@@ -15,10 +18,10 @@ class Blog(db.Model):
     entry = db.Column(db.String(900))
     owner_id = db.Column(db.ForeignKey('user.id'))
 
-    def __init__(self, blog_title, entry):
+    def __init__(self, blog_title, entry, owner_id):
         self.blog_title = blog_title
         self.entry = entry
-        self.owner = owner
+        self.owner_id = owner_id
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -30,6 +33,14 @@ class User(db.Model):
         self.username = username
         self.password = password
 
+#User must be logged in to write a blog post
+@app.before_request
+def require_login():
+    allowed_routes = ['index','blog','login','signup']
+    if request.endpoint not in allowed_routes and 'username' not in session:
+        return redirect('/login')
+
+#if they are not already a user
 @app.route("/signup", methods=['GET','POST'])
 def signup():
   username = request.form['username']
@@ -98,36 +109,67 @@ def login():
     else:
         return render_template('login.html')
 
-
+@app.route('/logout')
+def logout():
+    del session['username']
+    return redirect('/')
     
 
 @app.route('/blog', methods=['POST','GET'])
 def blog():
 
-    if request.method == 'POST':
-        blog_title = request.form['blog_title']
-        entry = request.form['entry']
-        new_blog = Blog(blog_title, entry)
-        db.session.add(new_blog)
-        db.session.commit()
-
-        
-        return render_template('blog.html',blog=new_blog)
+    if "user" in request.args:
+        user_id = request.args.get("user")
+        user = User.query.get(user_id)
+        user_blogs = Blog.query.filter_by(owner=user).all()
+        return render_template("single_user.html", page_title = user.username + "'s Posts!", 
+        user_blogs=user_blogs)
+    
+    single_post = request.args.get('id')
+    if single_post:
+        blog = Blog.query.get(single_post)
+        return render_template("viewpost.html", blog=blog)
 
     else:
-        blog = Blog.query.filter_by(id=request.args.get('id')).first()
-        print (blog)
-        return render_template('blog.html', blog=blog)
+        blogs = Blog.query.all()
+        return render_template('blog.html', page_title="All Blog Posts", blogs=blogs)
 
 @app.route('/', methods=['POST','GET'])
-def home():
-    blogs = Blog.query.all()
-    return render_template('home.html', blogs=blogs)
+def index():
+    users = User.query.all()
+    return render_template('index.html', users=users)
 
 @app.route('/newpost', methods=['POST','GET'])
 def newpost():
 
-    return render_template('newpost.html')
+    if request.method == 'GET':
+        return render_template('newpost.html')
+
+    if request.method == 'POST':
+        blog_title = request.form['blog_title']
+        entry = request.form['entry']
+
+    title_error = ''
+    entry_error = ''
+
+    if len(blog_title) == 0:
+        title_error = "Add a title for your post!"
+    
+    if len(entry) == 0:
+        entry_error = "You didn't write a blog dummy."
+
+    if title_error or entry_error:
+        return render_template('newpost.html', titlebase="New Entry", title_error=title_error,
+        entry_error=entry_error, blog_title=blog_title, entry=entry)
+
+    else:
+        if len(blog_title) and len(entry) > 0:
+            owner = User.query.filter_by(username=session['username']).first()
+            new_entry = Blog(blog_title, entry, owner_id)
+            db.session.add(new_entry)
+            db.session.commit()
+            return redirect('/blog?id=' + str(new_entry.id))
+
 
 if __name__ == "__main__":
     app.run()
