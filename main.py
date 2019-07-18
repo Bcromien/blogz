@@ -43,43 +43,45 @@ def require_login():
 #if they are not already a user
 @app.route("/signup", methods=['GET','POST'])
 def signup():
-  username = request.form['username']
-  password = request.form['password']
-  verify_pw = request.form['verify_pw']
+    if request.method == 'POST':
 
-  username_error = ''
-  password_error = ''
-  verify_pw_error = '' 
+        username = request.form['username']
+        password = request.form['password']
+        verify_pw = request.form['verify_pw']
 
-  if len(username) < 3:
-    username_error = "Username must be between 3-20 characters long."
+        username_error = ''
+        password_error = ''
+        verify_pw_error = '' 
 
-  if len(password) < 3:
-    password_error = "Password must be between 3-20 characters."
+        if len(username) < 3:
+            username_error = "Username must be between 3-20 characters long."
 
-  if verify_pw != password:
-    verify_pw_error = "Does not match password."
+        if len(password) < 3:
+            password_error = "Password must be between 3-20 characters."
 
-  if username_error or password_error or verify_pw_error:
-    username = username
-    return render_template('signup.html', username=username, password=password, verify_pw=verify_pw,
-    username_error=username_error, password_error=password_error, verify_pw_error=verify_pw_error)
+        if verify_pw != password:
+            verify_pw_error = "Does not match password."
 
-  existing_user = User.query.filter_by(username=username).first()
+        if username_error or password_error or verify_pw_error:
+            username = username
+            return render_template('signup.html', username=username, password=password, verify_pw=verify_pw,
+            username_error=username_error, password_error=password_error, verify_pw_error=verify_pw_error)
 
-  if existing_user:
-    username_error = "Username already exists"
-    return render_template('signup.html', username_error=username_error)
-  
-  if not existing_user:
-    new_user = User(username, password)
-    db.session.add(new_user)
-    db.session.commit()
-    session['username'] = username
-    return redirect('/newpost')
-  
-  else:
-    return render_template('signup.html')
+        existing_user = User.query.filter_by(username=username).first()
+
+        if existing_user:
+            username_error = "Username already exists"
+            return render_template('signup.html', username_error=username_error)
+        
+        if not existing_user:
+            new_user = User(username, password)
+            db.session.add(new_user)
+            db.session.commit()
+            session['username'] = username
+            return redirect('/newpost')
+        
+    else:
+        return render_template('signup.html')
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -164,7 +166,7 @@ def newpost():
 
     else:
         if len(blog_title) and len(entry) > 0:
-            owner = User.query.filter_by(username=session['username']).first()
+            owner_id = User.query.filter_by(username=session['username']).first().id
             new_entry = Blog(blog_title, entry, owner_id)
             db.session.add(new_entry)
             db.session.commit()

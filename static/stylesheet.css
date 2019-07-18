@@ -7,7 +7,9 @@ body{
 }
 
 h1{
-    font-size: 50px;
+    font-size: 45px;
+    color: white;
+    background-color: rgb(107, 107, 107);
 }
 
 ul{
