@@ -120,12 +120,11 @@ def logout():
 @app.route('/blog', methods=['POST','GET'])
 def blog():
 
-    if "user" in request.args:
-        user_id = request.args.get("user")
-        user = User.query.get(user_id)
-        user_blogs = Blog.query.filter_by(owner=user).all()
+    if "user" in request.args: 
+        user = User.query.get(request.args.get("user"))
+        
         return render_template("single_user.html", page_title = user.username + "'s Posts!", 
-        user_blogs=user_blogs)
+        user_blogs=user.blogs)
     
     single_post = request.args.get('id')
     if single_post:

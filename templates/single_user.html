@@ -10,7 +10,7 @@
 
         <h2><a href="/blog?id={{blog.id}}">{{blog.blog_title}}</a></h2>
         <p>{{blog.entry}}</p>
-        <p><strong>By:</strong> <a href="/blog?user={{blog.owner_id}}">{{blog.owner_id.username}}</a></p>
+        <p><strong>By:</strong> <a href="/blog?user={{blog.owner.id}}">{{blog.owner.username}}</a></p>
         
         {% endfor %}
     {% endif %}
